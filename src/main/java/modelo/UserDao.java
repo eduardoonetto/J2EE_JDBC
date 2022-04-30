@@ -25,8 +25,7 @@ public class UserDao {
     ResultSet rs;
     
     
-     public User insert(String email, String password) {
-        User u = new User();
+     public boolean insert(String email, String password) {
         String Insert = "INSERT INTO user (email, password) VALUES(?,?)";
 
         try {
@@ -38,11 +37,12 @@ public class UserDao {
             ps.setString(1, email);
             ps.setString(2, password);
             //ejecutamos
-            ps.executeUpdate();
-            
+            boolean a = (ps.executeUpdate() > 0) ? true : false;
         } catch (SQLException e) {
             System.err.println("error= " + e);
+            return false;
         }
-        return u;
+        
+        return true;
     }
 }

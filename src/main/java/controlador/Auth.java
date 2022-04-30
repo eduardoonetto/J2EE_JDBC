@@ -20,7 +20,7 @@ import modelo.UserDao;
 public class Auth extends HttpServlet {
     User u=new User();
     UserDao uDao= new UserDao();
-
+    boolean SQL_RESPONSE;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,20 +35,30 @@ public class Auth extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
             if (!request.getParameter("userEmail").equals("") && !request.getParameter("password").equals("")) {
-                
-            String email = request.getParameter("userEmail");
-            String password = request.getParameter("password");
-            u=uDao.insert(email, password);
-            /* TODO output your page here. You may use following sample code. */
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Controlador Auth</title>");
-                out.println("</head>");
-                out.println("<body>");
-                out.println("<h1>Controlador: Auth <br/> Datos: <br/> E-mail: " + email + " <br/> Password: " + password + "</h1>");
-                out.println("</body>");
-                out.println("</html>");
+                //getParameter()
+                String email = request.getParameter("userEmail");
+                String password = request.getParameter("password");
+                if (uDao.insert(email, password)) {
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Controlador Auth</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<h1>Controlador: Auth <br/> Datos: <br/> E-mail: " + email + " <br/> Password: " + password + "</h1>");
+                    out.println("</body>");
+                    out.println("</html>");
+                }else{
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Controlador Auth</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<h1> Error al llamar al motor</h1>");
+                    out.println("</body>");
+                    out.println("</html>");
+                }
             }else{
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
