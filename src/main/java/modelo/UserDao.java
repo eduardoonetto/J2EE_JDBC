@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -25,24 +27,96 @@ public class UserDao {
     ResultSet rs;
     
     
-     public boolean insert(String email, String password) {
-        String Insert = "INSERT INTO user (email, password) VALUES(?,?)";
-
+    public boolean insert(String email, String password) {
+        String inset = "INSERT INTO `user` (`email`, `password`) VALUES(?,?)";
         try {
-            //Instaciamos la Clase Conexion (cn) y traemos su propiedad de Conexion (con)
-            con = cn.con;
-            //Pasamos la Instruccion SQL
-            ps = con.prepareStatement(Insert);
-            //llenamos los ?,?
+            con = cn.conectar();
+            ps = con.prepareStatement(inset);
             ps.setString(1, email);
             ps.setString(2, password);
-            //ejecutamos
-            boolean a = (ps.executeUpdate() > 0) ? true : false;
+            ps.executeUpdate();
+            cn.desconectar();
+            return true;
+
         } catch (SQLException e) {
-            System.err.println("error= " + e);
+            System.err.println("error " + e);
             return false;
+        } finally {
+            if (cn == null) {
+                cn.desconectar();
+            }
         }
-        
-        return true;
     }
+
+    public List<User> list() {
+        List<User> listUsers = new ArrayList<User>();
+        String list = "SELECT * FROM user";
+        try {
+            con = cn.conectar();
+            ps = con.prepareStatement(list);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String email = rs.getString(2);
+                String password = rs.getString(3);
+                User u = new User(id, email, password);
+                listUsers.add(u);
+            }
+            cn.desconectar();
+        } catch (SQLException e) {
+
+        } finally {
+            if (cn == null) {
+                cn.desconectar();
+            }
+
+        }
+        return listUsers;
+    }
+
+    public boolean delete(int id) {
+        String del = "DELETE FROM user where id_user=?";
+        try {
+            con = cn.conectar();
+            ps = con.prepareStatement(del);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            cn.desconectar();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("ERROR= "+ e);
+            return false;
+        } finally {
+            if (cn == null) {
+                cn.desconectar();
+            }
+        }
+    }
+
+    public User getById(int id) {
+        User u = new User();
+        String getById = "select * from user where id_user=?";
+        try {
+            con = cn.conectar();
+            ps = con.prepareStatement(getById);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                u.id = rs.getInt("id");
+                u.email = rs.getString("email");
+                u.password = rs.getString("password");
+            }
+            cn.desconectar();
+            return u;
+        } catch (SQLException e) {
+            return null;
+        } finally {
+            if (cn == null) {
+                cn.desconectar();
+            }
+        }
+
+    }
+
 }

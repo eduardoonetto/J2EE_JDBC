@@ -7,6 +7,8 @@ package config;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,12 +45,27 @@ public final class Conexion {
         return con;
     }
 
-   public void desconectar(){
-       try{
-           con.close();
-       }catch (SQLException ex){
-           System.out.println("Error encontrado= " + ex);
-       }
-   }
+       public void desconectar() {
+        try {
+
+            con.close();
+            System.err.println("Desconexion exitosa");
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+             System.err.println("Desconexion fallida");
+        }
+    }
+       
+    public static void main(String[] args) {
+        Conexion cn = new Conexion();
+        try {
+           cn.conectar(); 
+           cn.desconectar();
+        } catch (Exception e) {
+            System.out.println("ERROR");
+        }  
+        
+    }
    
 }
