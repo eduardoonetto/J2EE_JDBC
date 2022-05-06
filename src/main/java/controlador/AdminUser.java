@@ -46,7 +46,10 @@ public class AdminUser extends HttpServlet {
             }
             if (request.getParameter("action").equalsIgnoreCase("edit")) {
                 //if (!request.getParameter("id").equals("")) {
-                    int id = Integer.parseInt(request.getParameter("id"));
+                    //int id = Integer.parseInt(request.getParameter("email"));
+                    String ed_email = request.getParameter("email");
+
+                    System.out.println("EMAIL= " + ed_email);
                     //if (uDao.delete(id)) {
                     //        request.getRequestDispatcher("listar.jsp").forward(request, response);
                     //}

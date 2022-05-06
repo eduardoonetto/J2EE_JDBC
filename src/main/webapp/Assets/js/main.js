@@ -6,26 +6,40 @@
 
 
 function edit(id, email, password) {
-    Swal.fire({
-        title: 'Deseas Editar el registro numero ' + id + "-" + email + " " + password + '?',
-        text: "",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Editar!'
-    }).then((result) => {
+Swal.fire({
+  title: 'Editar Registro Nro '+id,
+  input: '',
+  inputAttributes: {
+    autocapitalize: 'off'
+  },
+  html: '<input id="email" type="email" value="'+email+'" placeholder="'+ email +'"  class="swal2-input"><br><input  class="swal2-input" value="'+password+'" id="password" type="password" placeholder="'+ password +'">',
+  showCancelButton: true,
+  confirmButtonText: 'Editar',
+  showLoaderOnConfirm: true,
+  preConfirm: function(result) {
+    var ed_email = $('#email').val();
+    var ed_password = $('#password').val();  
+    console.log(ed_password);
+    var request = $.ajax({
+  url: "/ProyectoBD/AdminUser",
+  type: "POST",
+  data: {
+                           ed_email : ed_email,
+                           ed_password : ed_password,
+                           action : 'edit'
+                            },
+  dataType: "html"
+});
+                     
+                       
+                    
+                
+  },
+  allowOutsideClick: () => !Swal.isLoading()
+});
+  }
 
-        if (result.value) {
-            Swal.fire(
-                    'Registro Editado!',
-                    'success'
-                    )
-            window.location.href = "Controlador?menu=clientes&accion=editar&rutE=" + rut;
-        }
-    })
 
-}
 function del(id) {
     Swal.fire({
         title: 'Deseas Eliminar el registro numero ' + id + '?',

@@ -76,7 +76,7 @@ public class UserDao {
     }
 
     public boolean delete(int id) {
-        String del = "DELETE FROM user where id_user=?";
+        String del = "DELETE FROM user where id=?";
         try {
             con = cn.conectar();
             ps = con.prepareStatement(del);
