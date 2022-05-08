@@ -28,7 +28,7 @@ public final class Conexion {
     public Conexion() {
         //Aqui podria definir si trabajaramos con otras BD
         this.con = (this.conectar() == null) ? null : this.conectar();
-        System.out.println("a1XX =" + con);
+        System.out.println("Status=" + con);
     }
     
     public Connection conectar(){

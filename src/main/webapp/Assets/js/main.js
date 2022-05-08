@@ -49,10 +49,14 @@ function edit(id, email, password) {
     }).then((result) => {
         if (result.isConfirmed) {
             myjson = JSON.parse(JSON.stringify(result.value.data));
-            console.log(myjson[0]['msg']);
-
+            if (myjson[0]['status'] === '500'){
+            icono="error";
+            }else{
+                icono = "success";
+            }
             Swal.fire({
-              title: myjson[0]['msg']
+                icon: icono,
+                title: myjson[0]['msg']
             });
         }
         sleep(1200).then(() => {
@@ -99,10 +103,13 @@ function del(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             myjson = JSON.parse(JSON.stringify(result.value.data));
-            console.log(myjson[0]['msg']);
-
+            if (myjson[0]['status'] === '500'){
+            icono="error";
+            }else{
+                icono = "success";
+            }
             Swal.fire({
-                
+              icon: icono,
               title: myjson[0]['msg']
             });
         }
