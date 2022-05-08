@@ -11,11 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.UserDao;
-
+import javax.servlet.annotation.MultipartConfig; 
 /**
  *
  * @author alumnosre
  */
+
 public class AdminUser extends HttpServlet {
     
     UserDao uDao= new UserDao();
@@ -30,42 +31,65 @@ public class AdminUser extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        //response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
-            if (request.getParameter("action").equalsIgnoreCase("delete")) {
-                
-                        System.out.println("ENTRE");
-                if (!request.getParameter("id").equals("")) {
-                    System.out.println("id= "+ request.getParameter("id"));
-                    int id = Integer.parseInt(request.getParameter("id"));
+            
+            //Arreglo, en caso de que venga Null cae en Exception ya que equalsIgnoreCase no puede comparar con nulls
+            //si que se inicializaron con "" y valida para llenar estos campos.
+            String H_action = "";
+            if (request.getHeader("action") != null){
+                H_action = request.getHeader("action");
+            }
+            
+            //borrar User
+            if (H_action.equalsIgnoreCase("delete")) {
+                if(!request.getHeader("del_id").equals("")) {
+                    //get_params
+                    int id = Integer.parseInt(request.getHeader("del_id"));
+                    //set_response
+                    response.setContentType("application/json;charset=UTF-8");
+                    String json_ok = "{\"data\" : [{\"status\":\"200\", \"msg\" : \"Registro eliminado con exito :)\"}]}";
+                    String json_error = "{\"data\" : [{\"status\":\"500\", \"msg\" : \"Error eliminando el regitro :(\"}]}";
+                   
                     if (uDao.delete(id)) {
-                        System.out.println("MIQUERY");
-                            request.getRequestDispatcher("listar.jsp").forward(request, response);
+                            out.println(json_ok);
+                    }else{
+                            out.println(json_error);
                     }
+                }else{
+                    response.setContentType("application/json;charset=UTF-8");
+                    String json_error = "{\"data\" : [{\"status\":\"400\", \"msg\" : \"Faltan datos :(\"}]}";
+                    out.println(json_error);
                 }
             }
-            if (request.getParameter("action").equalsIgnoreCase("edit")) {
-                //if (!request.getParameter("id").equals("")) {
-                    //int id = Integer.parseInt(request.getParameter("email"));
-                    String ed_email = request.getParameter("email");
-
-                    System.out.println("EMAIL= " + ed_email);
-                    //if (uDao.delete(id)) {
-                    //        request.getRequestDispatcher("listar.jsp").forward(request, response);
-                    //}
-                //}
+            
+            //editar User
+            if (H_action.equalsIgnoreCase("edit")) {
+                if(!request.getHeader("ed_id").equals("") && !request.getHeader("ed_email").equals("") && !request.getHeader("ed_password").equals("")) {
+                    //get_params
+                    String ed_email = request.getHeader("ed_email");
+                    String password = request.getHeader("ed_password");
+                    int id = Integer.parseInt(request.getHeader("ed_id"));
+                    //set_response
+                    response.setContentType("application/json;charset=UTF-8");
+                    String json_ok = "{\"data\" : [{\"status\":\"200\", \"msg\" : \"Registro editado con exito :)\"}]}";
+                    String json_error = "{\"data\" : [{\"status\":\"500\", \"msg\" : \"Error editando el regitro :(\"}]}";
+                   
+                    if (uDao.edit(id,ed_email,password)) {
+                            out.println(json_ok);
+                    }else{
+                            out.println(json_error);
+                    }
+                }else{
+                    response.setContentType("application/json;charset=UTF-8");
+                    String json_error = "{\"data\" : [{\"status\":\"400\", \"msg\" : \"Faltan datos :(\"}]}";
+                    out.println(json_error);
+                }
             }
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AdminUser</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AdminUser at aa" + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        }catch(Exception e){
+            System.out.println(e);
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

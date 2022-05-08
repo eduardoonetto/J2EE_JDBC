@@ -14,15 +14,17 @@
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> 
       
         <!-- estilos css -->
-        <link href="css/estilos.css" rel="stylesheet" type="text/css"/>
-        <!-- estilos sweetalert -->
-        <link rel="stylesheet" href="sweetalert2.min.css">
+        <link href="Assets/css/style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container">
-            <table class="table caption-top">
-                <caption>List of users</caption>
-                <thead class="table-dark">
+        <!-- As a heading -->
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-brand mb-0 h1">Eduardo Onetto</span>
+</nav>
+        <div class="container mt-4">
+            <table class="table table-hover table-dark table-bordered">
+                <caption>Todos los Usuarios</caption>
+                <thead class="">
                     <tr>
                         <th scope="col">id</th>
                         <th scope="col">email</th>
@@ -64,7 +66,7 @@
 
             </table>
 
-            <a class='btn btn-primary m-3' href="index.jsp">Volver</a>
+            <a class='btn btn-dark ' href="index.jsp">Volver</a>
 
 
         </div>

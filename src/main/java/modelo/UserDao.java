@@ -93,6 +93,27 @@ public class UserDao {
             }
         }
     }
+    
+    public boolean edit(int id, String new_email, String new_pass) {
+        String del = "UPDATE user SET email=?, password=? where id=?";
+        try {
+            con = cn.conectar();
+            ps = con.prepareStatement(del);
+            ps.setString(1, new_email);
+            ps.setString(2, new_pass);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+            cn.desconectar();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("ERROR= "+ e);
+            return false;
+        } finally {
+            if (cn == null) {
+                cn.desconectar();
+            }
+        }
+    }
 
     public User getById(int id) {
         User u = new User();

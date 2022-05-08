@@ -39,15 +39,7 @@ public class Auth extends HttpServlet {
                 String email = request.getParameter("userEmail");
                 String password = request.getParameter("password");
                 if (uDao.insert(email, password)) {
-                    out.println("<!DOCTYPE html>");
-                    out.println("<html>");
-                    out.println("<head>");
-                    out.println("<title>Controlador Auth</title>");
-                    out.println("</head>");
-                    out.println("<body>");
-                    out.println("<h1>Controlador: Auth <br/> Datos: <br/> E-mail: " + email + " <br/> Password: " + password + "</h1>");
-                    out.println("</body>");
-                    out.println("</html>");
+                    response.sendRedirect("listar.jsp");
                 }else{
                     out.println("<!DOCTYPE html>");
                     out.println("<html>");

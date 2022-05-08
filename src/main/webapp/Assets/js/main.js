@@ -3,63 +3,113 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 function edit(id, email, password) {
-Swal.fire({
-  title: 'Editar Registro Nro '+id,
-  input: '',
-  inputAttributes: {
-    autocapitalize: 'off'
-  },
-  html: '<input id="email" type="email" value="'+email+'" placeholder="'+ email +'"  class="swal2-input"><br><input  class="swal2-input" value="'+password+'" id="password" type="password" placeholder="'+ password +'">',
-  showCancelButton: true,
-  confirmButtonText: 'Editar',
-  showLoaderOnConfirm: true,
-  preConfirm: function(result) {
-    var ed_email = $('#email').val();
-    var ed_password = $('#password').val();  
-    console.log(ed_password);
-    var request = $.ajax({
-  url: "/ProyectoBD/AdminUser",
-  type: "POST",
-  data: {
-                           ed_email : ed_email,
-                           ed_password : ed_password,
-                           action : 'edit'
-                            },
-  dataType: "html"
-});
-                     
-                       
-                    
-                
-  },
-  allowOutsideClick: () => !Swal.isLoading()
-});
-  }
+    Swal.fire({
+    title: '-Editar Usuario-',
+    icon: 'warning',
+    confirmButtonColor: '#FACEA8',
+    html: '<input style="display:none" id="ed_id" type="text" value="'+id+'"><input id="email" type="email" value="'+email+'" placeholder="'+ email +'"  class="swal2-input"><br><input  class="swal2-input" value="'+password+'" id="password" type="password" placeholder="'+ password +'">',
+    inputAttributes: {
+      autocapitalize: 'off'
+    },
+    showCancelButton: true,
+    confirmButtonText: 'Editar',
+    showLoaderOnConfirm: true,
+    preConfirm: (users) => {
+      var ed_email = $('#email').val();
+      var ed_password = $('#password').val(); 
+      var ed_id = $('#ed_id').val(); 
+      //Llamamos por Fetch al AdminUser
+      return fetch("/ProyectoBD/AdminUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/text",
+        'ed_email': ed_email,
+        'ed_password': ed_password,
+        'ed_id': ed_id,
+        'action': 'edit'
+      }
+      }).then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .catch(error => {
+          Swal.showValidationMessage(
+            `Request failed: ${error}`
+          );
+        });
+    },
+    allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed) {
+            myjson = JSON.parse(JSON.stringify(result.value.data));
+            console.log(myjson[0]['msg']);
 
-
+            Swal.fire({
+              title: myjson[0]['msg']
+            });
+        }
+        sleep(1200).then(() => {
+            console.log('Despues del sleep');
+            location.reload();
+        });
+    });
+}
 function del(id) {
     Swal.fire({
-        title: 'Deseas Eliminar el registro numero ' + id + '?',
-        text: "",
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Eliminar!'
+    title: 'Deseas eliminar el registro ' + id + '?',
+    icon: 'error',
+    html: '<input style="display:none" id="del_id" type="text" value="'+id+'">',
+    inputAttributes: {
+      autocapitalize: 'off'
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#F27474',
+    confirmButtonText: 'Eliminar',
+    showLoaderOnConfirm: true,
+    preConfirm: (users) => {
+      var del_id = $('#del_id').val(); 
+      //Llamamos por Fetch al AdminUser
+      return fetch("/ProyectoBD/AdminUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/text",
+        'del_id': del_id,
+        'action': 'delete'
+      }
+      }).then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .catch(error => {
+          Swal.showValidationMessage(
+            `Request failed: ${error}`
+          );
+        });
+    },
+    allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
+        if (result.isConfirmed) {
+            myjson = JSON.parse(JSON.stringify(result.value.data));
+            console.log(myjson[0]['msg']);
 
-        if (result.value) {
-            Swal.fire(
-                    
-                    'Registro eliminado!',
-                    'success',
-                    
-                    )
-                  window.location.href = "AdminUser?action=delete&id=" + id;
+            Swal.fire({
+                
+              title: myjson[0]['msg']
+            });
         }
-
-    })
+        sleep(1200).then(() => {
+            console.log('Despues del sleep');
+            location.reload();
+        });
+    });
+    
 }
