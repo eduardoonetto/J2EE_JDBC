@@ -7,6 +7,8 @@ package config;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,7 +16,7 @@ import java.sql.Connection;
  */
 public final class Conexion {
     public static final String USERNAME = "root";
-    public static final String PASSWORD = "Pelusa12";
+    public static final String PASSWORD = "";
     public static final String HOST = "localhost";
     public static final String PORT = "3306";
     public static final String DATABASE = "PRU";
@@ -25,7 +27,8 @@ public final class Conexion {
     //Constructor:  
     public Conexion() {
         //Aqui podria definir si trabajaramos con otras BD
-        this.con = this.conectar();
+        this.con = (this.conectar() == null) ? null : this.conectar();
+        System.out.println("Status=" + con);
     }
     
     public Connection conectar(){
@@ -38,15 +41,31 @@ public final class Conexion {
         }catch(SQLException e){
             System.out.println("Error en SQL= "+e);
         }
+        
         return con;
     }
-    
-   public void desconectar(){
-       try{
-           con.close();
-       }catch (SQLException ex){
-           System.out.println("Error encontrado= " + ex);
-       }
-   }
+
+       public void desconectar() {
+        try {
+
+            con.close();
+            System.err.println("Desconexion exitosa");
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+             System.err.println("Desconexion fallida");
+        }
+    }
+       
+    public static void main(String[] args) {
+        Conexion cn = new Conexion();
+        try {
+           cn.conectar(); 
+           cn.desconectar();
+        } catch (Exception e) {
+            System.out.println("ERROR");
+        }  
+        
+    }
    
 }

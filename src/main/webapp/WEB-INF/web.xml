@@ -4,9 +4,17 @@
         <servlet-name>Auth</servlet-name>
         <servlet-class>controlador.Auth</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminUser</servlet-name>
+        <servlet-class>controlador.AdminUser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Auth</servlet-name>
         <url-pattern>/Auth</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminUser</servlet-name>
+        <url-pattern>/AdminUser</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
